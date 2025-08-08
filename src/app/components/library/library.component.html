@@ -1,0 +1,259 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-8">
+            <div class="mx-auto h-16 w-16 bg-primary-600 rounded-xl flex items-center justify-center mb-4">
+                <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">My Library</h1>
+            <p class="text-gray-600">Your collection of AI-generated book summaries</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Library</label>
+                    <div class="relative">
+                        <input id="search" type="text" placeholder="Search by title, author, or category..."
+                            class="input pl-10" (input)="onSearch($event)" />
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-48">
+                    <label for="sort" class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                    <select id="sort" class="input" (change)="onSortChange($event)" [value]="sortBy">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="title">Title A-Z</option>
+                        <option value="author">Author A-Z</option>
+                        <option value="confidence">Confidence Score</option>
+                    </select>
+                </div>
+
+                <div class="flex items-end">
+                    <a routerLink="/book-summary" class="btn btn-primary inline-flex items-center">
+                        <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add New Summary
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <a routerLink="/dashboard" class="btn btn-nav inline-flex items-center">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <div *ngIf="errorMessage" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex">
+                <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="ml-3 text-sm text-red-700">{{ errorMessage }}</p>
+            </div>
+        </div>
+
+        <div *ngIf="isLoading" class="text-center py-12">
+            <svg class="animate-spin h-12 w-12 text-primary-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
+            </svg>
+            <p class="text-gray-600">Loading your library...</p>
+        </div>
+
+        <div *ngIf="!isLoading && filteredItems.length === 0 && libraryItems.length === 0"
+            class="bg-white rounded-2xl shadow-xl p-12 text-center">
+            <svg class="h-24 w-24 text-gray-400 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <h3 class="text-2xl font-semibold text-gray-900 mb-4">Your library is empty</h3>
+            <p class="text-gray-600 mb-8 max-w-md mx-auto">Start building your collection of AI-generated book summaries
+                by adding your first book.</p>
+            <a routerLink="/book-summary" class="btn btn-primary inline-flex items-center">
+                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Generate Your First Summary
+            </a>
+        </div>
+
+        <div *ngIf="!isLoading && filteredItems.length === 0 && libraryItems.length > 0"
+            class="bg-white rounded-2xl shadow-xl p-12 text-center">
+            <svg class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">No results found</h3>
+            <p class="text-gray-600">Try adjusting your search terms or filters.</p>
+        </div>
+
+        <div *ngIf="!isLoading && filteredItems.length > 0" class="library-grid">
+            <div *ngFor="let item of filteredItems"
+                class="library-card bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+                <div class="p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <img *ngIf="item.bookData.imageLinks.thumbnail" [src]="item.bookData.imageLinks.thumbnail"
+                                [alt]="item.bookData.title" class="w-16 h-24 object-cover rounded-lg shadow-md" />
+                            <div *ngIf="!item.bookData.imageLinks.thumbnail"
+                                class="w-16 h-24 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-lg font-semibold text-gray-900 truncate mb-1">{{ item.bookData.title }}</h3>
+                            <p class="text-sm text-gray-600 truncate mb-2">by {{ item.bookData.authors.join(', ') }}</p>
+
+                            <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                [ngClass]="getConfidenceColor(item.confidenceMetrics.overallScore)">
+                                {{ item.confidenceMetrics.overallScore }}% {{
+                                getConfidenceText(item.confidenceMetrics.overallScore) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-700 line-clamp-3">{{ item.summaries.short }}</p>
+                    </div>
+
+                    <div class="mt-4 flex items-center justify-between text-xs text-gray-500">
+                        <span>{{ item.createdAt | date:'shortDate' }}</span>
+                        <span>{{ item.summaries.language.toUpperCase() }}</span>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 px-6 py-4 flex justify-between items-center">
+                    <button class="text-primary-600 hover:text-primary-800 text-sm font-medium"
+                        (click)="toggleExpanded(item.id || '')">
+                        {{ isExpanded(item.id || '') ? 'Hide Details' : 'View Details' }}
+                    </button>
+
+                    <div class="flex space-x-2">
+                        <div class="relative" [class.group]="true">
+                            <button class="text-gray-600 hover:text-gray-800 p-1">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 10v6m0 0l-4-4m4 4l4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </button>
+
+                            <div
+                                class="absolute bottom-full right-0 mb-2 w-32 bg-white rounded-lg shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                <button (click)="exportSummary(item, 'txt')"
+                                    class="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg">
+                                    Export as TXT
+                                </button>
+                                <button (click)="exportSummary(item, 'json')"
+                                    class="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg">
+                                    Export as JSON
+                                </button>
+                            </div>
+                        </div>
+
+                        <button (click)="deleteItem(item.id!)" class="text-red-600 hover:text-red-800 p-1"
+                            title="Delete">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div *ngIf="isExpanded(item.id || '')" class="card-details border-t bg-gray-50">
+                    <div class="details-content show p-6 space-y-4">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-900 mb-2">Detailed Summary</h4>
+                            <p class="text-sm text-gray-700 leading-relaxed">{{ item.summaries.detailed }}</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-900 mb-2">Confidence Breakdown</h4>
+                            <div class="grid grid-cols-2 lg:grid-cols-5 gap-2 text-xs">
+                                <div class="text-center">
+                                    <div class="text-gray-600">Data Quality</div>
+                                    <div class="font-medium">{{ (item.confidenceMetrics.detailedBreakdown &&
+                                        item.confidenceMetrics.detailedBreakdown.dataQuality) ||
+                                        (item.confidenceMetrics.factors &&
+                                        item.confidenceMetrics.factors.dataQualityScore)
+                                        || 'N/A' }}<span
+                                            *ngIf="(item.confidenceMetrics.detailedBreakdown && item.confidenceMetrics.detailedBreakdown.dataQuality) || (item.confidenceMetrics.factors && item.confidenceMetrics.factors.dataQualityScore)">%</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-gray-600">Source Reliability</div>
+                                    <div class="font-medium">{{ (item.confidenceMetrics.detailedBreakdown &&
+                                        item.confidenceMetrics.detailedBreakdown.sourceReliability) ||
+                                        item.confidenceMetrics.sourceReliability }}%</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-gray-600">Content Coverage</div>
+                                    <div class="font-medium">{{ (item.confidenceMetrics.detailedBreakdown &&
+                                        item.confidenceMetrics.detailedBreakdown.contentCoverage) ||
+                                        item.confidenceMetrics.contentCoverage }}%</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-gray-600">AI Processing</div>
+                                    <div class="font-medium">{{ (item.confidenceMetrics.detailedBreakdown &&
+                                        item.confidenceMetrics.detailedBreakdown.aiProcessing) ||
+                                        (item.confidenceMetrics.factors &&
+                                        item.confidenceMetrics.factors.aiProcessingScore)
+                                        || 'N/A' }}<span
+                                            *ngIf="(item.confidenceMetrics.detailedBreakdown && item.confidenceMetrics.detailedBreakdown.aiProcessing) || (item.confidenceMetrics.factors && item.confidenceMetrics.factors.aiProcessingScore)">%</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-gray-600">Cross Validation</div>
+                                    <div class="font-medium">{{ (item.confidenceMetrics.detailedBreakdown &&
+                                        item.confidenceMetrics.detailedBreakdown.crossValidation) ||
+                                        item.confidenceMetrics.crossReferenceValidation }}%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-900 mb-2">Book Information</h4>
+                            <div class="text-xs text-gray-600 space-y-1">
+                                <div><span class="font-medium">Publisher:</span> {{ item.bookData.publisher }}</div>
+                                <div><span class="font-medium">Published:</span> {{ item.bookData.publishedDate }}</div>
+                                <div><span class="font-medium">Pages:</span> {{ item.bookData.pageCount || 'Unknown' }}
+                                </div>
+                                <div><span class="font-medium">Categories:</span> {{ item.bookData.categories.join(', ')
+                                    }}
+                                </div>
+                                <div><span class="font-medium">ISBN:</span> {{ item.bookData.isbn }}</div>
+                                <div *ngIf="item.bookData.averageRating > 0">
+                                    <span class="font-medium">Rating:</span> {{ item.bookData.averageRating }}/5 ({{
+                                    item.bookData.ratingsCount }} reviews)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

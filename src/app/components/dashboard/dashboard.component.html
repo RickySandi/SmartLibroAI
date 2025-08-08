@@ -1,0 +1,178 @@
+<div class="min-h-screen bg-gray-50">
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="h-8 w-8 bg-primary-600 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-semibold text-gray-900">SmartLibro AI</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-700">
+                        <span *ngIf="authService.getCurrentUser() as user">
+                            Welcome, {{ user.displayName || user.email }}!
+                        </span>
+                    </div>
+                    <button (click)="logout()" class="btn btn-secondary">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome to SmartLibro AI</h2>
+                <p class="text-lg text-gray-600 mb-8">Your intelligent book summary platform for electoral services</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                <div
+                    class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+                    <div class="flex items-center mb-4">
+                        <div class="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 ml-3">Generate Summary</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Create intelligent book summaries using ISBN lookup</p>
+                    <a routerLink="/book-summary" class="btn btn-primary w-full block text-center">Start Summarizing</a>
+                </div>
+                <div
+                    class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+                    <div class="flex items-center mb-4">
+                        <div class="h-12 w-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 ml-3">My Library</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Access your saved book summaries</p>
+                    <a routerLink="/library" class="btn btn-green w-full block text-center">View Library</a>
+                </div>
+                <div
+                    class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+                    <div class="flex items-center mb-4">
+                        <div class="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 ml-3">Settings</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Manage your account preferences</p>
+                    <a routerLink="/settings" class="btn btn-purple w-full block text-center">Open Settings</a>
+                </div>
+            </div>
+            <div class="mt-12">
+                <h3 class="text-xl font-semibold text-gray-900 mb-6">Recent Activity</h3>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div *ngIf="recentSummaries.length === 0" class="text-center py-8">
+                        <svg class="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <h4 class="text-lg font-medium text-gray-900 mb-2">No summaries yet</h4>
+                        <p class="text-gray-600">Start by generating your first book summary!</p>
+                    </div>
+
+                    <div *ngIf="recentSummaries.length > 0" class="space-y-4">
+                        <div *ngFor="let summary of recentSummaries"
+                            class="flex items-center space-x-4 p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                            <div class="flex-shrink-0">
+                                <img *ngIf="summary.imageLinks?.thumbnail || summary.imageLinks?.smallThumbnail"
+                                    [src]="summary.imageLinks?.thumbnail || summary.imageLinks?.smallThumbnail"
+                                    [alt]="summary.title" class="w-16 h-20 object-cover rounded-lg shadow-sm">
+                                <div *ngIf="!summary.imageLinks?.thumbnail && !summary.imageLinks?.smallThumbnail"
+                                    class="w-16 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="flex-grow min-w-0">
+                                <div class="flex items-start justify-between">
+                                    <div class="min-w-0 flex-1">
+                                        <h4 class="text-sm font-medium text-gray-900 truncate">{{ summary.title }}</h4>
+                                        <p class="text-sm text-gray-500 truncate">
+                                            {{ summary.authors.join(', ') || 'Unknown Author' }}
+                                        </p>
+                                        <div class="flex items-center mt-2 space-x-3">
+                                            <span
+                                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                                                [class]="summary.isSaved ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                                                <svg *ngIf="summary.isSaved" class="h-3 w-3 mr-1" fill="currentColor"
+                                                    viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                                {{ summary.isSaved ? 'Saved' : 'Not Saved' }}
+                                            </span>
+                                            <span class="text-xs text-gray-500">
+                                                {{ getTimeAgo(summary.generatedAt) }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center space-x-2 ml-4">
+                                        <button (click)="viewSummary(summary)"
+                                            class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 hover:text-blue-700 transition-colors duration-200 border border-blue-200 hover:border-blue-300">
+                                            View
+                                        </button>
+                                        <button (click)="removeSummary(summary.id)"
+                                            class="px-3 py-1 text-sm font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 hover:text-red-700 transition-colors duration-200 border border-red-200 hover:border-red-300">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-gray-100">
+                            <button (click)="toggleClearConfirmation()"
+                                class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 hover:text-gray-700 transition-colors duration-200 border border-gray-200 hover:border-gray-300">
+                                Clear all activity
+                            </button>
+
+                            <div *ngIf="showClearConfirmation"
+                                class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                                <h4 class="text-lg font-medium text-red-900 mb-2">Are you sure?</h4>
+                                <p class="text-sm text-red-700 mb-4">
+                                    This action cannot be undone. This will permanently delete all your recent activity
+                                    history.
+                                </p>
+                                <div class="flex space-x-4">
+                                    <button (click)="confirmClearAll()"
+                                        class="btn bg-red-600 text-white hover:bg-red-700">
+                                        Yes, Clear all activity
+                                    </button>
+                                    <button (click)="toggleClearConfirmation()" class="btn btn-secondary">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

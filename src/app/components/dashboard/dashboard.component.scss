@@ -1,0 +1,29 @@
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+}
+
+.btn-green {
+    background-color: #16a34a;
+    color: white;
+}
+
+.btn-green:hover {
+    background-color: #15803d;
+}
+
+.btn-purple {
+    background-color: #9333ea;
+    color: white;
+}
+
+.btn-purple:hover {
+    background-color: #7c3aed;
+}

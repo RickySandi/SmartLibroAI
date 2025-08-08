@@ -1,0 +1,94 @@
+<div class="confidence-metrics-container" *ngIf="confidenceMetrics">
+    <h3 class="confidence-title">
+        <i class="fas fa-chart-line"></i>
+        AI Confidence Analysis
+        <span class="overall-score" [class]="getScoreClass(confidenceMetrics.overallScore)">
+            {{confidenceMetrics.overallScore}}/100
+        </span>
+    </h3>
+
+    <div class="breakdown-section">
+        <h4><i class="fas fa-analytics"></i> Confidence Breakdown</h4>
+        <div class="breakdown-grid" *ngIf="confidenceMetrics.detailedBreakdown">
+            <div class="metric-card" *ngFor="let metric of getBreakdownMetrics()">
+                <div class="metric-header">
+                    <i [class]="metric.icon"></i>
+                    <span class="metric-name">{{metric.name}}</span>
+                </div>
+                <div class="metric-score" [class]="getScoreClass(metric.score)">
+                    {{metric.score}}/100
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-fill" [style.width.%]="metric.score" [class]="getScoreClass(metric.score)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sources-section" *ngIf="aiSummary?.sourceAttribution">
+        <h4><i class="fas fa-sources"></i> Source Attribution</h4>
+        <div class="sources-list">
+            <div class="source-item" *ngFor="let source of aiSummary?.sourceAttribution"
+                [class]="getSourceTypeClass(source.type)">
+                <div class="source-header">
+                    <i [class]="getSourceIcon(source.type)"></i>
+                    <span class="source-type">{{getSourceTypeName(source.type)}}</span>
+                    <div class="source-metrics">
+                        <span class="reliability">{{source.reliability}}% reliable</span>
+                        <span class="weight">{{(source.weight * 100).toFixed(0)}}% weight</span>
+                    </div>
+                </div>
+                <div class="source-content">{{source.content}}</div>
+                <div class="source-details">
+                    <span class="source-name">{{source.source}}</span>
+                    <span class="source-length" *ngIf="source.length > 0">{{source.length}} chars</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="processing-section" *ngIf="aiSummary">
+        <h4><i class="fas fa-cogs"></i> Processing Details</h4>
+        <div class="processing-details">
+            <div class="processing-item">
+                <span class="label">Method:</span>
+                <span class="value" [class]="aiSummary.processingMethod">
+                    {{getProcessingMethodName(aiSummary.processingMethod)}}
+                </span>
+            </div>
+            <div class="processing-item" *ngIf="aiSummary.translationApplied">
+                <span class="label">Translation:</span>
+                <span class="value translation-applied">
+                    <i class="fas fa-language"></i>
+                    Applied
+                </span>
+            </div>
+            <div class="processing-item">
+                <span class="label">Generated:</span>
+                <span class="value">{{aiSummary.generatedAt | date:'medium'}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detailed-factors" *ngIf="showDetailedFactors && aiSummary?.detailedConfidenceFactors">
+        <h4><i class="fas fa-microscope"></i> Detailed Analysis</h4>
+        <div class="factors-grid">
+            <div class="factor-category" *ngFor="let category of getDetailedFactors()">
+                <h5>{{category.name}}</h5>
+                <div class="factor-items">
+                    <div class="factor-item" *ngFor="let factor of category.factors">
+                        <span class="factor-label">{{factor.label}}:</span>
+                        <span class="factor-value">{{factor.value}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-6">
+        <button class="btn btn-primary" (click)="toggleDetailedFactors()">
+            <i [class]="showDetailedFactors ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="mr-2"></i>
+            {{showDetailedFactors ? 'Hide' : 'Show'}} Detailed Analysis
+        </button>
+    </div>
+</div>

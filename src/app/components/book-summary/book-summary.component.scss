@@ -1,0 +1,94 @@
+.confidence-badge {
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.book-cover {
+    max-height: 300px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-left: 4px solid #3b82f6;
+}
+
+.isbn-input {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+
+.loading-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.confidence-high {
+    background-color: #10b981;
+    color: white;
+}
+
+.confidence-medium {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.confidence-low {
+    background-color: #ef4444;
+    color: white;
+}
+
+.length-indicator {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .book-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .confidence-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .confidence-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}

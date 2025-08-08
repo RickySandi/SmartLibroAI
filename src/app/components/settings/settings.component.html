@@ -1,0 +1,351 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-8">
+            <div class="mx-auto h-16 w-16 bg-primary-600 rounded-xl flex items-center justify-center mb-4">
+                <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Account Settings</h1>
+            <p class="text-gray-600">Manage your account preferences and security settings</p>
+        </div>
+
+        <div *ngIf="isLoading" class="text-center py-12">
+            <svg class="animate-spin h-12 w-12 text-primary-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
+            </svg>
+            <p class="text-gray-600">Loading your settings...</p>
+        </div>
+
+        <div *ngIf="!isLoading" class="space-y-8">
+            <div *ngIf="successMessage" class="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div class="flex">
+                    <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p class="ml-3 text-sm text-green-700">{{ successMessage }}</p>
+                </div>
+            </div>
+
+            <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div class="flex">
+                    <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p class="ml-3 text-sm text-red-700">{{ errorMessage }}</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6">Profile Information</h2>
+                <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                    <div class="flex items-center space-x-4">
+                        <div class="h-16 w-16 bg-primary-100 rounded-full flex items-center justify-center">
+                            <img *ngIf="currentUser?.photoURL" [src]="currentUser?.photoURL"
+                                [alt]="currentUser?.displayName || 'User'" class="h-16 w-16 rounded-full object-cover">
+                            <svg *ngIf="!currentUser?.photoURL" class="h-8 w-8 text-primary-600" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">{{ currentUser?.displayName || 'No display
+                                name set' }}</h3>
+                            <p class="text-gray-600">{{ currentUser?.email }}</p>
+                            <div class="flex items-center mt-1">
+                                <span class="text-sm"
+                                    [class]="currentUser?.emailVerified ? 'text-green-600' : 'text-orange-600'">
+                                    {{ currentUser?.emailVerified ? 'Email verified' : 'Email not verified' }}
+                                </span>
+                                <button *ngIf="!currentUser?.emailVerified" (click)="sendEmailVerification()"
+                                    class="ml-2 text-xs text-primary-600 hover:text-primary-800 underline">
+                                    Send verification
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="displayName" class="block text-sm font-medium text-gray-700 mb-2">Display
+                                Name</label>
+                            <input id="displayName" type="text" formControlName="displayName" class="input"
+                                [class.border-red-500]="isFieldInvalid('profile', 'displayName')" />
+                            <div *ngIf="isFieldInvalid('profile', 'displayName')" class="mt-1 text-sm text-red-600">
+                                {{ getFieldError('profile', 'displayName') }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="photoURL" class="block text-sm font-medium text-gray-700 mb-2">Profile Photo
+                                URL</label>
+                            <input id="photoURL" type="url" formControlName="photoURL" class="input"
+                                placeholder="https://example.com/photo.jpg"
+                                [class.border-red-500]="isFieldInvalid('profile', 'photoURL')" />
+                            <div *ngIf="isFieldInvalid('profile', 'photoURL')" class="mt-1 text-sm text-red-600">
+                                {{ getFieldError('profile', 'photoURL') }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button type="submit" [disabled]="profileForm.invalid || profileLoading"
+                            class="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span *ngIf="!profileLoading">Update Profile</span>
+                            <span *ngIf="profileLoading" class="flex items-center">
+                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                Updating...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6">Security Settings</h2>
+
+                <div class="border-b border-gray-200 pb-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">Password</h3>
+                            <p class="text-sm text-gray-600" *ngIf="canChangePassword">Update your password to keep your
+                                account secure</p>
+                            <p class="text-sm text-gray-600" *ngIf="!canChangePassword">
+                                Your account uses {{ getProviderDisplayName(userProviders[0]) }} authentication.
+                                Password management is handled by your authentication provider.
+                            </p>
+                        </div>
+                        <button *ngIf="canChangePassword" (click)="togglePasswordForm()" class="btn btn-secondary">
+                            {{ showPasswordForm ? 'Cancel' : 'Change Password' }}
+                        </button>
+                        <div *ngIf="!canChangePassword" class="flex space-x-2">
+                            <span
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                {{ getProviderDisplayName(userProviders[0]) }} Account
+                            </span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="showPasswordForm && canChangePassword" class="mt-4">
+                        <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="currentPassword"
+                                        class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                                    <input id="currentPassword" type="password" formControlName="currentPassword"
+                                        class="input"
+                                        [class.border-red-500]="isFieldInvalid('password', 'currentPassword')" />
+                                    <div *ngIf="isFieldInvalid('password', 'currentPassword')"
+                                        class="mt-1 text-sm text-red-600">
+                                        {{ getFieldError('password', 'currentPassword') }}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-2">New
+                                        Password</label>
+                                    <input id="newPassword" type="password" formControlName="newPassword" class="input"
+                                        [class.border-red-500]="isFieldInvalid('password', 'newPassword')" />
+                                    <div *ngIf="isFieldInvalid('password', 'newPassword')"
+                                        class="mt-1 text-sm text-red-600">
+                                        {{ getFieldError('password', 'newPassword') }}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="confirmPassword"
+                                        class="block text-sm font-medium text-gray-700 mb-2">Confirm New
+                                        Password</label>
+                                    <input id="confirmPassword" type="password" formControlName="confirmPassword"
+                                        class="input"
+                                        [class.border-red-500]="isFieldInvalid('password', 'confirmPassword')" />
+                                    <div *ngIf="isFieldInvalid('password', 'confirmPassword')"
+                                        class="mt-1 text-sm text-red-600">
+                                        {{ getFieldError('password', 'confirmPassword') }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex space-x-4 mt-6">
+                                <button type="submit" [disabled]="passwordForm.invalid || passwordLoading"
+                                    class="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span *ngIf="!passwordLoading">Update Password</span>
+                                    <span *ngIf="passwordLoading">Updating...</span>
+                                </button>
+                                <button type="button" (click)="sendPasswordResetEmail()" class="btn btn-secondary">
+                                    Send Reset Email
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div *ngIf="!canChangePassword" class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div class="flex">
+                            <svg class="h-5 w-5 text-blue-400 mt-0.5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div class="ml-3">
+                                <h4 class="text-sm font-medium text-blue-800">Password Management</h4>
+                                <p class="text-sm text-blue-700 mt-1">
+                                    Your account uses {{ getProviderDisplayName(userProviders[0]) }} authentication.
+                                    To change your password, please:
+                                </p>
+                                <ul class="text-sm text-blue-700 mt-2 list-disc ml-4">
+                                    <li *ngIf="isGoogleUser">Visit your <a href="https://myaccount.google.com/security"
+                                            target="_blank" class="underline">Google Account security settings</a></li>
+                                    <li *ngIf="isGitHubUser">Visit your <a href="https://github.com/settings/security"
+                                            target="_blank" class="underline">GitHub security settings</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-gray-200 pb-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">Email Address</h3>
+                            <p class="text-sm text-gray-600" *ngIf="canChangeEmail">Update your email address</p>
+                            <p class="text-sm text-gray-600" *ngIf="!canChangeEmail">
+                                Your email is managed by {{ getProviderDisplayName(userProviders[0]) }}.
+                                Email changes must be done through your authentication provider.
+                            </p>
+                        </div>
+                        <button *ngIf="canChangeEmail" (click)="toggleEmailForm()" class="btn btn-secondary">
+                            {{ showEmailForm ? 'Cancel' : 'Change Email' }}
+                        </button>
+                        <div *ngIf="!canChangeEmail" class="flex space-x-2">
+                            <span
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                {{ getProviderDisplayName(userProviders[0]) }} Email
+                            </span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="showEmailForm && canChangeEmail" class="mt-4">
+                        <form [formGroup]="emailForm" (ngSubmit)="updateEmail()">
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="newEmail" class="block text-sm font-medium text-gray-700 mb-2">New Email
+                                        Address</label>
+                                    <input id="newEmail" type="email" formControlName="newEmail" class="input"
+                                        [class.border-red-500]="isFieldInvalid('email', 'newEmail')" />
+                                    <div *ngIf="isFieldInvalid('email', 'newEmail')" class="mt-1 text-sm text-red-600">
+                                        {{ getFieldError('email', 'newEmail') }}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="emailPassword"
+                                        class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                                    <input id="emailPassword" type="password" formControlName="currentPassword"
+                                        class="input"
+                                        [class.border-red-500]="isFieldInvalid('email', 'currentPassword')" />
+                                    <div *ngIf="isFieldInvalid('email', 'currentPassword')"
+                                        class="mt-1 text-sm text-red-600">
+                                        {{ getFieldError('email', 'currentPassword') }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <button type="submit" [disabled]="emailForm.invalid || emailLoading"
+                                    class="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span *ngIf="!emailLoading">Update Email</span>
+                                    <span *ngIf="emailLoading">Updating...</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div *ngIf="!canChangeEmail" class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div class="flex">
+                            <svg class="h-5 w-5 text-blue-400 mt-0.5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div class="ml-3">
+                                <h4 class="text-sm font-medium text-blue-800">Email Management</h4>
+                                <p class="text-sm text-blue-700 mt-1">
+                                    Your email address is managed by {{ getProviderDisplayName(userProviders[0]) }}.
+                                    To change your email, please:
+                                </p>
+                                <ul class="text-sm text-blue-700 mt-2 list-disc ml-4">
+                                    <li *ngIf="isGoogleUser">Visit your <a
+                                            href="https://myaccount.google.com/personal-info" target="_blank"
+                                            class="underline">Google Account personal info settings</a></li>
+                                    <li *ngIf="isGitHubUser">Visit your <a href="https://github.com/settings/emails"
+                                            target="_blank" class="underline">GitHub email settings</a></li>
+                                </ul>
+                                <p class="text-sm text-blue-700 mt-2">
+                                    <strong>Note:</strong> After changing your email with {{
+                                    getProviderDisplayName(userProviders[0]) }},
+                                    you may need to sign out and sign back in for the changes to take effect in this
+                                    app.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="text-lg font-medium text-red-600">Delete Account</h3>
+                            <p class="text-sm text-gray-600">Permanently delete your account and all associated data</p>
+                        </div>
+                        <button (click)="toggleDeleteConfirmation()" class="btn bg-red-600 text-white hover:bg-red-700">
+                            Delete Account
+                        </button>
+                    </div>
+
+                    <div *ngIf="showDeleteConfirmation" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <h4 class="text-lg font-medium text-red-900 mb-2">Are you sure?</h4>
+                        <p class="text-sm text-red-700 mb-4">
+                            This action cannot be undone. This will permanently delete your account and remove all your
+                            data from our servers.
+                        </p>
+                        <div class="flex space-x-4">
+                            <button (click)="deleteAccount()" class="btn bg-red-600 text-white hover:bg-red-700">
+                                Yes, Delete Account
+                            </button>
+                            <button (click)="toggleDeleteConfirmation()" class="btn btn-secondary">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-center">
+            <a routerLink="/dashboard" class="btn btn-nav inline-flex items-center px-6 py-3 text-base font-medium">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
